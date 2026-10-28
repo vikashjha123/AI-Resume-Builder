@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Career Resume — Enterprise Career Acceleration</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Global Toast Notifications Container -->
+<div id="toast-container" class="toast-container"></div>
+
+<div class="app-layout">
+  <!-- Top Navigation Bar -->
+  <header class="app-topbar hidden" id="app-topbar">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <button class="btn-hamburger" onclick="app.toggleSidebar()" title="Toggle Navigation Menu">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+      <div class="brand" onclick="app.navigate('dashboard')" style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+        <span class="brand-badge">AI</span>
+        <strong style="font-size: 1rem; letter-spacing: -0.3px;">Career Resume</strong>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span class="score-badge score-green" id="topbar-live-status">● Live Session</span>
+      <div class="user-avatar" id="mobile-avatar-badge" style="width: 32px; height: 32px; font-size: 0.78rem; cursor: pointer;" onclick="app.navigate('account')" title="My Account">U</div>
+    </div>
+  </header>
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div class="sidebar-backdrop hidden" id="sidebar-backdrop" onclick="app.closeSidebar()"></div>
+
+  <!-- Collapsible Sidebar -->
+  <aside class="app-sidebar hidden" id="main-sidebar">
+    <div class="sidebar-brand" onclick="app.navigate('dashboard')">
+      <div class="brand-badge">AI</div>
+      <div class="brand-text">Career Resume</div>
+    </div>
+
+    <nav class="sidebar-menu">
+      <div class="menu-item active" onclick="app.navigate('dashboard')">📊 Dashboard</div>
+      <div class="menu-item" onclick="app.navigate('profile')">👤 Master Profile</div>
+      <div class="menu-item" onclick="app.navigate('resumes')">📁 My Resumes</div>
+      <div class="menu-item" onclick="app.navigate('builder')">✨ Resume Builder</div>
+      <div class="menu-item" onclick="app.navigate('ats-analyzer')">📈 ATS Audit</div>
+      <div class="menu-item" onclick="app.navigate('job-matcher')">🎯 Job Matcher</div>
+      <div class="menu-item" onclick="app.navigate('mock-interview')">🎙️ Mock Interview</div>
+      <div class="menu-item" onclick="app.navigate('roadmap')">🗺️ Career Roadmap</div>
+      <div class="menu-item" onclick="app.navigate('github')">🐙 GitHub Audit</div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="profile-widget" onclick="app.navigate('account')" title="My Profile & Settings">
+        <div class="user-avatar" id="user-avatar-badge">U</div>
+        <div class="user-info-text">
+          <span class="user-name" id="user-display-name">Candidate</span>
+          <span class="user-email" id="user-display-email">candidate@example.com</span>
+        </div>
+        <button class="btn-logout" title="Sign Out" onclick="event.stopPropagation(); app.logout()">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <div class="main-wrapper" id="main-content-wrap">
+    <main class="app-container">
+
+      <!-- VIEW 1: LANDING PAGE -->
+      <section id="view-landing" class="view content-narrow">
+        <div style="text-align: center; padding: 60px 0;">
+          <span class="score-badge score-green">Enterprise Career Acceleration</span>
+          <h1 style="font-size: 2.8rem; margin: 18px 0; font-weight: 800; line-height: 1.2;">
+            Build Resumes. Match Jobs.<br/><span style="color: var(--primary);">Ace Technical Interviews.</span>
+          </h1>
+          <p style="color: var(--text-muted); margin: 0 auto 30px; font-size: 1.05rem;">
+            Engineered for students, freshers, and professionals across all domains to maximize shortlist conversions with Truth-Protected AI.
+          </p>
+          <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary btn-lg" onclick="app.openAuthModal('register')">Get Started Free →</button>
+            <button class="btn btn-outline btn-lg" onclick="app.openAuthModal('login')">Sign In</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 2: DASHBOARD -->
+      <section id="view-dashboard" class="view content-wide hidden">
+        <div class="card dash-hero-card">
+          <div class="dash-hero-main">
+            <div>
+              <div class="dash-hero-badges">
+                <span class="score-badge score-green" id="dash-status-pill">● System Active</span>
+                <span class="stat-desc" id="dash-date-indicator">Daily Career Overview</span>
+              </div>
+              <h1 id="dash-greeting" class="dash-hero-title">Welcome back, Candidate</h1>
+              <p class="stat-desc" style="font-size: 0.92rem; max-width: 580px; margin-top: 4px;">
+                Track application strength, fix keyword deficiencies against target job descriptions, and benchmark interview readiness.
+              </p>
+            </div>
+
+            <div class="dash-hero-actions">
+              <button class="btn btn-primary" onclick="app.navigate('builder')">+ Create Resume</button>
+              <button class="btn btn-outline" onclick="app.navigate('ats-analyzer')">⚡ ATS Audit</button>
+              <button class="btn btn-outline" onclick="app.navigate('job-matcher')">🎯 Match JD</button>
+            </div>
+          </div>
+
+          <div class="dash-readiness-strip mt-3">
+            <div class="dash-readiness-info">
+              <span>Overall Career Readiness Index</span>
+              <strong id="dash-readiness-score" style="color: var(--primary);">74% (Shortlist Ready)</strong>
+            </div>
+            <div class="bar-wrap" style="height: 7px; margin: 6px 0 0 0;">
+              <div class="bar-fill" id="dash-readiness-bar" style="width: 74%; background: linear-gradient(90deg, #3b82f6, #10b981);"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-4 mt-3">
+          <div class="card stat-card metric-card-glow">
+            <div class="metric-top-row">
+              <span class="stat-label">Average ATS Score</span>
+              <span class="metric-icon-badge">📈</span>
+            </div>
+            <div class="stat-value" style="color: var(--success);" id="stat-ats-score">0</div>
+            <div class="metric-footer-badge">
+              <span class="score-badge score-green" id="stat-ats-target-pill">Target: 80+ for Tier-1</span>
+            </div>
+          </div>
+
+          <div class="card stat-card metric-card-glow">
+            <div class="metric-top-row">
+              <span class="stat-label">Profile Strength</span>
+              <span class="metric-icon-badge">👤</span>
+            </div>
+            <div class="stat-value" id="stat-profile-comp">0%</div>
+            <div class="bar-wrap"><div class="bar-fill" id="prog-profile" style="width: 0%;"></div></div>
+            <span class="stat-desc" style="font-size: 0.74rem;">Master credentials completion</span>
+          </div>
+
+          <div class="card stat-card metric-card-glow">
+            <div class="metric-top-row">
+              <span class="stat-label">Jobs Analyzed</span>
+              <span class="metric-icon-badge">🎯</span>
+            </div>
+            <div class="stat-value" id="stat-jobs-analyzed">0</div>
+            <span class="stat-desc" id="stat-match-avg" style="font-size: 0.82rem; color: var(--primary); font-weight: 600;">Avg: 0% match</span>
+          </div>
+
+          <div class="card stat-card metric-card-glow">
+            <div class="metric-top-row">
+              <span class="stat-label">Mock Interviews</span>
+              <span class="metric-icon-badge">🎙️</span>
+            </div>
+            <div class="stat-value" id="stat-interviews-count">0</div>
+            <span class="stat-desc" id="stat-interview-avg" style="font-size: 0.82rem; color: var(--warning); font-weight: 600;">Avg score: 0%</span>
+          </div>
+        </div>
+
+        <div class="dash-main-grid mt-3">
+          <div class="dash-col-left">
+            <div class="card">
+              <div class="card-header-badge">
+                <div>
+                  <h3 style="font-size: 1.05rem; margin: 0;">📁 Active Resumes</h3>
+                  <p class="stat-desc">Your tailored resume versions ready for application:</p>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="app.navigate('resumes')">View All →</button>
+              </div>
+              <div id="dash-recent-resumes" class="dash-resumes-list mt-3">
+                <p class="stat-desc">Loading recent resumes...</p>
+              </div>
+            </div>
+
+            <div class="card mt-3">
+              <div class="card-header-badge">
+                <div>
+                  <h3 style="font-size: 1.05rem; margin: 0;">⚡ Market Skill Deficiencies</h3>
+                  <p class="stat-desc">Competencies most frequently requested in your analyzed Job Descriptions:</p>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="app.navigate('job-matcher')">Run New Scan</button>
+              </div>
+              <div id="dash-demand-skills" class="skills-tag-wall mt-3">
+                <span class="stat-desc">Paste Job Descriptions in the Job Matcher to view live market demands.</span>
+              </div>
+              <div class="dash-skill-footer mt-3">
+                <span class="stat-desc">Missing skills reduce ATS ranking by up to 35%.</span>
+                <button class="btn btn-primary btn-sm" onclick="app.navigate('roadmap')">Explore Learning Path →</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="dash-col-right">
+            <div class="card">
+              <div class="card-header-badge">
+                <h3 style="font-size: 1.05rem; margin: 0;">🚀 Recommended Next Steps</h3>
+                <span class="score-badge score-green">Priority</span>
+              </div>
+              <p class="stat-desc" style="margin-top: 4px;">Tailored suggestions to increase recruiter callbacks:</p>
+
+              <div class="dash-action-list mt-3">
+                <div class="action-item-card" onclick="app.navigate('ats-analyzer')">
+                  <div class="action-icon-pill">📄</div>
+                  <div class="action-text-wrap">
+                    <strong>Audit Resume ATS Structure</strong>
+                    <p class="stat-desc">Check your PDF against parsing criteria.</p>
+                  </div>
+                  <span class="action-arrow-btn">→</span>
+                </div>
+
+                <div class="action-item-card" onclick="app.navigate('builder')">
+                  <div class="action-icon-pill">✨</div>
+                  <div class="action-text-wrap">
+                    <strong>AI Metric Bullet Polish</strong>
+                    <p class="stat-desc">Rewrite bullet points with quantifiable results.</p>
+                  </div>
+                  <span class="action-arrow-btn">→</span>
+                </div>
+
+                <div class="action-item-card" onclick="app.navigate('mock-interview')">
+                  <div class="action-icon-pill">🎙️</div>
+                  <div class="action-text-wrap">
+                    <strong>Take 5-Min Technical Mock</strong>
+                    <p class="stat-desc">Practice architecture & domain questions.</p>
+                  </div>
+                  <span class="action-arrow-btn">→</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card mt-3">
+              <h3 style="font-size: 1.02rem; margin-bottom: 4px;">🎯 3-Step Candidate Success Flow</h3>
+              <p class="stat-desc">The standard path to top-tier shortlisting:</p>
+              <div class="compact-steps-list mt-3">
+                <div class="compact-step-row" onclick="app.navigate('profile')">
+                  <span class="step-mini-circle">1</span>
+                  <div>
+                    <strong style="font-size: 0.85rem;">Master Profile</strong>
+                    <p class="stat-desc">Fill education, links & tech skills once</p>
+                  </div>
+                </div>
+                <div class="compact-step-row" onclick="app.navigate('builder')">
+                  <span class="step-mini-circle">2</span>
+                  <div>
+                    <strong style="font-size: 0.85rem;">Tailored Resume Build</strong>
+                    <p class="stat-desc">Select 100% ATS-verified vector template</p>
+                  </div>
+                </div>
+                <div class="compact-step-row" onclick="app.navigate('job-matcher')">
+                  <span class="step-mini-circle">3</span>
+                  <div>
+                    <strong style="font-size: 0.85rem;">JD Keyword Match</strong>
+                    <p class="stat-desc">Eliminate missing skills & gap topics</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 3: USER PROFILE & ACCOUNT SETTINGS -->
+      <section id="view-account" class="view content-medium hidden">
+        <div class="page-head">
+          <div>
+            <h2>My Profile & Account Settings</h2>
+            <p class="stat-desc">Manage credentials, account identity, and password security.</p>
+          </div>
+        </div>
+
+        <div class="card" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 16px;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="profile-avatar-large" id="account-avatar-large">U</div>
+            <div>
+              <h3 id="account-display-fullname" style="font-size: 1.2rem; margin: 0;">Candidate Name</h3>
+              <p class="stat-desc" id="account-display-email" style="margin-top: 2px;">user@example.com</p>
+              <div style="margin-top: 6px;">
+                <span class="score-badge score-green" id="account-display-role">ROLE: USER</span>
+                <span class="score-badge score-yellow" style="margin-left: 6px;">Active Account</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="app.navigate('profile')">Edit Career Info →</button>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3 style="font-size: 1rem; margin-bottom: 14px;">Personal Information</h3>
+            <form id="name-update-form" onsubmit="event.preventDefault(); app.updateAccountName();">
+              <div class="form-group">
+                <label for="acc-name-input">Full Name</label>
+                <input type="text" id="acc-name-input" placeholder="Your full name" required />
+              </div>
+              <div class="form-group">
+                <label for="acc-email-input">Email Address (Read-only)</label>
+                <input type="email" id="acc-email-input" disabled style="opacity: 0.65; cursor: not-allowed;" />
+                <span class="stat-desc" style="font-size: 0.72rem;">Email ID cannot be changed once registered.</span>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm mt-2">Update Name</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3 style="font-size: 1rem; margin-bottom: 14px;">Password & Security</h3>
+            <form id="password-change-form" onsubmit="event.preventDefault(); app.updatePassword();">
+              <div class="form-group">
+                <label for="acc-new-pass">New Password</label>
+                <input type="password" id="acc-new-pass" placeholder="••••••••" minlength="6" autocomplete="new-password" required />
+              </div>
+              <div class="form-group">
+                <label for="acc-confirm-pass">Confirm Password</label>
+                <input type="password" id="acc-confirm-pass" placeholder="••••••••" minlength="6" autocomplete="new-password" required />
+              </div>
+              <button type="submit" class="btn btn-outline btn-sm mt-2">Change Password</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 4: MASTER PROFILE -->
+      <section id="view-profile" class="view content-medium hidden">
+        <div class="page-head">
+          <div>
+            <h2>Master Career Profile</h2>
+            <p class="stat-desc">Information entered here feeds directly into all tailored resume templates.</p>
+          </div>
+          <button class="btn btn-primary" onclick="app.saveProfile()">Save Master Profile</button>
+        </div>
+
+        <div class="card mb-3">
+          <h3 class="form-section-head">📌 Personal & Contact Details</h3>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Job Title Target</label>
+              <input type="text" id="prof-title" placeholder="e.g. Java Backend Developer / Data Analyst" />
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="text" id="prof-phone" placeholder="+91 9876543210" />
+            </div>
+            <div class="form-group">
+              <label>Current Location</label>
+              <input type="text" id="prof-loc" placeholder="Delhi, India / Remote" />
+            </div>
+            <div class="form-group">
+              <label>LinkedIn Profile URL</label>
+              <input type="text" id="prof-linkedin" placeholder="https://linkedin.com/in/username" />
+            </div>
+            <div class="form-group">
+              <label>GitHub Profile URL</label>
+              <input type="text" id="prof-github" placeholder="https://github.com/username" />
+            </div>
+            <div class="form-group">
+              <label>Portfolio / Personal Website</label>
+              <input type="text" id="prof-portfolio" placeholder="https://myportfolio.dev" />
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-3">
+          <h3 class="form-section-head">📝 Professional Summary / Objective</h3>
+          <div class="form-group">
+            <textarea id="prof-summary" rows="4" placeholder="Passionate software developer with strong hands-on proficiency in Spring Boot, MySQL, and REST APIs..."></textarea>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="form-section-head">⚡ Categorized Industry Skills</h3>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Core Skills / Backend</label>
+              <input type="text" id="prof-skills-backend" placeholder="Java, Spring Boot, Hibernate, JDBC" />
+            </div>
+            <div class="form-group">
+              <label>Databases & Caching</label>
+              <input type="text" id="prof-skills-db" placeholder="MySQL, PostgreSQL, Redis" />
+            </div>
+            <div class="form-group">
+              <label>DevOps & Tooling</label>
+              <input type="text" id="prof-skills-cloud" placeholder="Docker, Git, GitHub, Maven, Postman" />
+            </div>
+            <div class="form-group">
+              <label>Frontend / Secondary Skills</label>
+              <input type="text" id="prof-skills-frontend" placeholder="HTML5, CSS3, JavaScript" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 5: MY RESUMES -->
+      <section id="view-resumes" class="view content-wide hidden">
+        <div class="page-head">
+          <div>
+            <h2>My Resume Versions</h2>
+            <p class="stat-desc">Manage domain-tailored ATS resume files.</p>
+          </div>
+          <button class="btn btn-primary" onclick="app.navigate('builder')">+ Create Resume</button>
+        </div>
+        <div id="resumes-list-container" class="grid-3"></div>
+      </section>
+
+      <!-- VIEW 6: RESUME BUILDER & AI ENHANCER -->
+      <section id="view-builder" class="view content-wide hidden">
+        <div class="page-head">
+          <div>
+            <h2>Interactive Resume Editor</h2>
+            <p class="stat-desc">Build ATS-optimized resumes. Auto-fill from old resumes or upload your previous PDF.</p>
+          </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn btn-outline" onclick="app.triggerAiEnhance()">✨ AI Enhance Bullet</button>
+            <button class="btn btn-primary" onclick="app.saveResumeFromEditor()">Save Resume</button>
+          </div>
+        </div>
+
+        <!-- 1-Click Data Quick-Fill Toolbar -->
+        <div class="card mb-3 import-toolbar-card">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; flex: 1;">
+              <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-main);">⚡ Auto-Fill From:</span>
+              <select id="builder-existing-resume-select" onchange="app.loadFromSavedResume(this.value)" style="min-width: 210px; padding: 6px 10px; font-size: 0.82rem;">
+                <option value="">📂 Choose from Saved Resumes...</option>
+              </select>
+              <button type="button" class="btn btn-outline btn-sm" onclick="app.loadFromMasterProfile()" title="Use details from Master Profile">
+                👤 Use Master Profile
+              </button>
+            </div>
+
+            <div>
+              <input type="file" id="builder-resume-upload" accept=".pdf" style="display:none;" onchange="app.handleBuilderUpload(event)" />
+              <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('builder-resume-upload').click()">
+                📄 Upload Old Resume (PDF)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="editor-layout">
+          <div class="card">
+            <div class="form-group">
+              <label for="editor-template">Select 100% ATS-Friendly Template</label>
+              <select id="editor-template" onchange="app.renderLivePreview()">
+                <option value="ATS_MINIMAL" selected>ATS Minimal Classic (99.9% Pass Rate - Monochrome)</option>
+                <option value="MODERN_TECH">Modern Tech Developer (Software Engineer Stack)</option>
+                <option value="FRESHER">Fresher / College Student (Projects & Education First)</option>
+                <option value="EXECUTIVE">Executive / Lead (Metrics & Leadership Focus)</option>
+                <option value="COMPACT_ONE_PAGE">Compact One-Page (Tight Spacing - Guaranteed 1 Page)</option>
+              </select>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label for="editor-candidate-name">Candidate Full Name</label>
+                <input type="text" id="editor-candidate-name" placeholder="Your Name" oninput="app.renderLivePreview()" />
+              </div>
+              <div class="form-group">
+                <label for="editor-role">Target Role Title</label>
+                <input type="text" id="editor-role" value="Java Backend Developer" oninput="app.renderLivePreview()" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="editor-name">Resume Document Name (Internal Tag)</label>
+              <input type="text" id="editor-name" value="Software Developer Resume" oninput="app.renderLivePreview()" />
+            </div>
+
+            <div class="form-group">
+              <label for="editor-experience">Experience Bullets (Type or Auto-Fill & Click 'AI Enhance')</label>
+              <textarea id="editor-experience" rows="6" oninput="app.renderLivePreview()" placeholder="• Engineered microservices using Java and Spring Boot..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="editor-projects">Featured Projects</label>
+              <textarea id="editor-projects" rows="5" oninput="app.renderLivePreview()" placeholder="• Project Name: High Throughput System..."></textarea>
+            </div>
+          </div>
+
+          <!-- Crisp A4 Paper Simulation -->
+          <div class="ats-sheet-container">
+            <div class="ats-sheet" id="resume-live-preview"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 7: ATS ANALYZER -->
+      <section id="view-ats-analyzer" class="view content-narrow hidden">
+        <div class="page-head">
+          <div>
+            <h2>ATS Resume Auditor</h2>
+            <p class="stat-desc">Upload your PDF resume to evaluate compliance against 0–100 parsing standards.</p>
+          </div>
+        </div>
+
+        <div class="card upload-card-box">
+          <div class="upload-icon-circle">📄</div>
+          <h3 style="font-size: 1.15rem; margin-top: 10px;">Select Resume PDF</h3>
+          <p class="stat-desc" style="margin-top: 4px;">Selectable text format recommended (Max size 10MB)</p>
+          <input type="file" id="resume-file-input" accept=".pdf" style="display:none;" onchange="app.handlePdfUpload(event)" />
+          <button class="btn btn-outline mt-3" onclick="document.getElementById('resume-file-input').click()">Browse PDF Document</button>
+        </div>
+
+        <div id="ats-template-rec-box" class="card template-rec-card mt-3 hidden">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <span class="score-badge score-green">100% ATS Verified Template Recommendation</span>
+              <h3 id="ats-rec-template-name" style="margin: 8px 0 4px; font-size: 1.15rem; color: var(--primary);">ATS Minimal</h3>
+              <p id="ats-rec-template-reason" class="stat-desc" style="max-width: 650px;">Reason for recommendation will appear here...</p>
+            </div>
+            <button class="btn btn-primary" onclick="app.applyRecommendedTemplate()">Apply Template in Builder →</button>
+          </div>
+        </div>
+
+        <div id="ats-results-panel" class="card mt-3 hidden">
+          <div style="display: flex; align-items: center; gap: 20px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 16px;">
+            <div class="score-circle-lg" id="ats-score-display">0</div>
+            <div>
+              <h3 style="font-size: 1.15rem; margin: 0;">Overall ATS Shortlist Score</h3>
+              <p class="stat-desc" style="margin-top: 2px;">Calculated against multi-domain corporate ATS rubrics.</p>
+            </div>
+          </div>
+          <div class="grid-4 mt-3">
+            <div class="score-metric-pill">Keywords: <strong id="ats-kw-score">0</strong>/100</div>
+            <div class="score-metric-pill">Structure: <strong id="ats-str-score">0</strong>/100</div>
+            <div class="score-metric-pill">Skills: <strong id="ats-skl-score">0</strong>/100</div>
+            <div class="score-metric-pill">Formatting: <strong id="ats-fmt-score">0</strong>/100</div>
+          </div>
+          <h4 style="margin: 20px 0 10px; font-size: 0.95rem;">Key Recommendations:</h4>
+          <ul id="ats-recommendations-list" class="styled-bullet-list"></ul>
+        </div>
+      </section>
+
+      <!-- VIEW 8: JOB MATCHER & SKILL GAP -->
+      <section id="view-job-matcher" class="view content-wide hidden">
+        <div class="page-head">
+          <div>
+            <h2>Job Matcher & Skill Gap Analyzer</h2>
+            <p class="stat-desc">Benchmark your saved resume directly against employer job descriptions.</p>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="form-group">
+              <label for="match-resume-select">Select Candidate Resume</label>
+              <select id="match-resume-select"></select>
+            </div>
+            <div class="form-group">
+              <label for="match-job-title">Target Role Title</label>
+              <input type="text" id="match-job-title" placeholder="e.g. Java Backend Engineer / Data Analyst" />
+            </div>
+            <div class="form-group">
+              <label for="match-jd-text">Paste Job Description (JD)</label>
+              <textarea id="match-jd-text" rows="9" placeholder="Paste full JD requirements, responsibilities and tech stack here..."></textarea>
+            </div>
+            <button class="btn btn-primary w-100" onclick="app.executeJobMatch()">Analyze JD Match Rate</button>
+          </div>
+
+          <div class="card" id="match-output">
+            <h3 style="font-size: 1.05rem; margin-bottom: 4px;">Job Compatibility Report</h3>
+            <p class="stat-desc" id="jd-empty-msg">Select a resume and paste a JD on the left to inspect matches.</p>
+
+            <div id="match-data-pane" class="hidden">
+              <div style="font-size: 2.2rem; font-weight: 800; color: var(--primary); margin: 10px 0;" id="jd-match-score">0%</div>
+
+              <h4 style="margin: 16px 0 8px; font-size: 0.9rem;">Detected Skills Breakdown</h4>
+              <div id="match-skills-badges" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+
+              <h4 style="margin: 20px 0 8px; font-size: 0.9rem;">Skill Gap Learning Plan</h4>
+              <div id="skill-gap-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 9: MOCK INTERVIEW -->
+      <section id="view-mock-interview" class="view content-narrow hidden">
+        <div class="page-head">
+          <div>
+            <h2>AI Mock Technical Interview</h2>
+            <p class="stat-desc">Live simulation loop with instant technical feedback.</p>
+          </div>
+        </div>
+
+        <div class="card" id="interview-config-card">
+          <h3 style="font-size: 1.05rem; margin-bottom: 14px;">Configure Practice Session</h3>
+          <div class="grid-3">
+            <div class="form-group">
+              <label for="int-role">Target Role</label>
+              <input type="text" id="int-role" value="Java Backend Developer" />
+            </div>
+            <div class="form-group">
+              <label for="int-type">Category</label>
+              <select id="int-type">
+                <option value="Technical">Technical & Architecture</option>
+                <option value="HR">HR & Behavioral</option>
+                <option value="Mixed">Mixed Loop</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="int-diff">Difficulty</label>
+              <select id="int-diff">
+                <option value="Beginner">Fresher / Beginner</option>
+                <option value="Intermediate" selected>Intermediate</option>
+                <option value="Advanced">Senior / Lead</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-primary mt-2" onclick="app.startInterviewSession()">Begin Practice Session →</button>
+        </div>
+
+        <div class="card mt-3 hidden" id="interview-runner-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
+            <span class="score-badge score-green" id="int-cat-badge">Technical</span>
+            <span id="int-progress-text" class="stat-desc">Question 1 of 5</span>
+          </div>
+          <h3 id="int-question-text" style="margin: 18px 0 14px; font-size: 1.15rem; line-height: 1.4;">Question loading...</h3>
+          <div class="form-group">
+            <label for="int-answer-input">Your Answer (Speak or Type)</label>
+            <textarea id="int-answer-input" rows="7" placeholder="Explain your design decisions, trade-offs, and technical rationale..."></textarea>
+          </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px;">
+            <button class="btn btn-outline" onclick="app.voiceInputToggle()">🎤 Voice Input</button>
+            <button class="btn btn-primary" onclick="app.submitInterviewAnswer()">Submit Answer →</button>
+          </div>
+        </div>
+
+        <div class="card mt-3 hidden" id="interview-results-card">
+          <h3 style="font-size: 1.15rem; margin-bottom: 14px;">Performance Scorecard</h3>
+          <div class="grid-4">
+            <div class="score-metric-pill">Overall: <strong id="int-res-overall">0</strong>%</div>
+            <div class="score-metric-pill">Technical: <strong id="int-res-tech">0</strong>%</div>
+            <div class="score-metric-pill">Communication: <strong id="int-res-comm">0</strong>%</div>
+            <div class="score-metric-pill">Problem Solving: <strong id="int-res-prob">0</strong>%</div>
+          </div>
+          <div id="int-feedback-details" style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border-subtle);"></div>
+        </div>
+      </section>
+
+      <!-- VIEW 10: CAREER ROADMAP -->
+      <section id="view-roadmap" class="view content-wide hidden">
+        <div class="page-head">
+          <div>
+            <h2>Engineering & Career Roadmap</h2>
+            <p class="stat-desc">Milestone-driven industry curriculum paired with verified courses, documentation, and progress tracking.</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-primary btn-sm" onclick="app.openAddCourseModal()">+ Add Custom Course / Link</button>
+            <button class="btn btn-outline btn-sm" onclick="app.resetRoadmapProgress()">↺ Reset Progress</button>
+          </div>
+        </div>
+
+        <div class="card roadmap-hero-banner">
+          <div class="roadmap-hero-content">
+            <div>
+              <span class="score-badge score-green">Active Target Journey</span>
+              <h3 id="rm-target-role-title" style="font-size: 1.45rem; margin: 8px 0 4px; font-weight: 800;">Python Developer</h3>
+              <p class="stat-desc" id="rm-transition-text">Transitioning: Junior Professional → Senior Engineer</p>
+            </div>
+            <div class="roadmap-hero-stats">
+              <div class="rm-stat-box">
+                <span class="stat-label">Total Duration</span>
+                <strong id="rm-stat-duration" style="font-size: 1.1rem; color: var(--text-main);">~6 Months</strong>
+              </div>
+              <div class="rm-stat-box">
+                <span class="stat-label">Hours Tracked</span>
+                <strong id="rm-hours-progress" style="font-size: 1.1rem; color: var(--success);">0 hrs</strong>
+              </div>
+              <div class="rm-stat-box">
+                <span class="stat-label">Journey Progress</span>
+                <strong id="rm-overall-progress-num" style="font-size: 1.1rem; color: var(--primary);">0%</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="roadmap-role-bar mt-3">
+            <input type="text" id="rm-role-input"
+                   placeholder="Enter target career or course (e.g. Data Analyst, DevOps, React Frontend, Python Developer)..."
+                   onkeyup="if(event.key==='Enter') app.generateCustomRoadmap();" />
+            <button class="btn btn-primary" onclick="app.generateCustomRoadmap()">Generate Custom Roadmap 🚀</button>
+          </div>
+
+          <div class="quick-roles-row mt-2">
+            <span class="stat-desc" style="font-weight: 600; align-self: center;">Popular:</span>
+            <button class="quick-role-pill" onclick="app.quickLoadRoadmap('Python Developer')">Python Developer</button>
+            <button class="quick-role-pill" onclick="app.quickLoadRoadmap('React Frontend Developer')">React Frontend</button>
+            <button class="quick-role-pill" onclick="app.quickLoadRoadmap('DevOps & Cloud Engineer')">DevOps & Cloud</button>
+            <button class="quick-role-pill" onclick="app.quickLoadRoadmap('Data Analyst')">Data Analyst</button>
+            <button class="quick-role-pill" onclick="app.quickLoadRoadmap('Java Backend Developer')">Java Backend</button>
+          </div>
+        </div>
+
+        <div class="roadmap-timeline-wrapper mt-3">
+          <div id="roadmap-timeline" class="roadmap-stepper"></div>
+        </div>
+      </section>
+
+      <!-- VIEW 11: GITHUB AUDIT -->
+      <section id="view-github" class="view content-medium hidden">
+        <div class="page-head">
+          <div>
+            <h2>GitHub Profile Auditor</h2>
+            <p class="stat-desc">Public repos audit karke resume ke liye best showcase projects identify karein.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <input type="text" id="gh-username" placeholder="Enter GitHub username (e.g. torvalds)" style="flex: 1; min-width: 220px;" />
+            <button class="btn btn-primary" onclick="app.analyzeGithub()">Audit Repositories</button>
+          </div>
+        </div>
+        <div id="github-results" class="card mt-3 hidden">
+          <h3 style="font-size: 1.05rem; margin-bottom: 14px;">Recommended Projects for Resume</h3>
+          <div id="gh-repos-list" class="grid-2"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- Add Custom Course Modal -->
+<div class="modal-backdrop hidden" id="add-course-modal">
+  <div class="modal-box">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3>Add Learning Resource / Course</h3>
+      <button onclick="app.closeAddCourseModal()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:1.2rem;">✕</button>
+    </div>
+    <form id="add-course-form" onsubmit="event.preventDefault(); app.saveCustomCourse();">
+      <div class="form-group">
+        <label for="course-phase-select">Assign to Milestone Phase</label>
+        <select id="course-phase-select" required></select>
+      </div>
+      <div class="form-group">
+        <label for="course-title-input">Course / Tutorial Title</label>
+        <input type="text" id="course-title-input" placeholder="e.g. Complete Python & FastAPI Bootcamp" required />
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="course-platform-input">Platform / Provider</label>
+          <input type="text" id="course-platform-input" placeholder="e.g. Udemy, YouTube, Coursera, Docs" required />
+        </div>
+        <div class="form-group">
+          <label for="course-hours-input">Estimated Hours</label>
+          <input type="number" id="course-hours-input" placeholder="15" min="1" max="500" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="course-url-input">Direct Course / Resource URL</label>
+        <input type="url" id="course-url-input" placeholder="https://..." required />
+      </div>
+      <button type="submit" class="btn btn-primary w-100" style="margin-top: 12px;">Add Course to Roadmap →</button>
+    </form>
+  </div>
+</div>
+
+<!-- Authentication Modal -->
+<div class="modal-backdrop hidden" id="auth-modal">
+  <div class="modal-box">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 id="auth-modal-title">Sign In</h3>
+      <button onclick="app.closeAuthModal()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:1.2rem;">✕</button>
+    </div>
+    <form id="auth-form" onsubmit="app.handleAuthSubmit(event)">
+      <div class="form-group" id="group-name">
+        <label for="auth-name">Full Name</label>
+        <input type="text" id="auth-name" placeholder="Candidate Name" autocomplete="name" />
+      </div>
+      <div class="form-group">
+        <label for="auth-email">Email Address</label>
+        <input type="email" id="auth-email" required placeholder="user@domain.com" autocomplete="username" />
+      </div>
+      <div class="form-group">
+        <label for="auth-password">Password</label>
+        <input type="password" id="auth-password" required minlength="6" autocomplete="current-password" placeholder="••••••••" />
+      </div>
+      <button type="submit" class="btn btn-primary w-100" style="margin-top: 12px;">Continue →</button>
+    </form>
+  </div>
+</div>
+
+<!-- Absolute static path to guarantee file loads from /js/api.js -->
+<script src="/js/api.js"></script>
+</body>
+</html>
